@@ -1,0 +1,19 @@
+Patient Name: John Doe
+DOB: 01/15/1980
+Date: 04/08/2026
+
+Reason for Visit: Annual Checkup, mild chest pain reported.
+Vitals:
+- BP: 130/85
+- Heart Rate: 78 bpm
+- O2 Saturation: 98%
+
+Metabolic Panel:
+- Fasting Glucose: 110 mg/dL (Elevated)
+- HbA1c: 5.9% (Pre-diabetes range)
+- Cholesterol: 210 mg/dL
+
+Notes:
+No significant family history of pulmonary issues. Mild family history of Type 2 Diabetes.
+
+Recommendation: Needs further screening.

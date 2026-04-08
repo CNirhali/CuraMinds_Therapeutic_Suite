@@ -1,0 +1,17 @@
+Patient Name: David Johnson
+DOB: 09/30/1988
+Date: 04/08/2026
+
+Reason for Visit: Extreme thirst, frequent urination, fatigue.
+Laboratory Data:
+- Fasting Blood Glucose: 215 mg/dL (High)
+- HbA1c: 8.4% (Diabetic Range)
+- Ketones (urine): Trace amount
+Scan Reference: none
+
+Family History:
+Both parents diagnosed with Type 2 Diabetes post age 50.
+
+Impression:
+Clear indicators for Diabetes Mellitus. Type characteristics need further evaluation, but insulin regulation therapy recommended to begin immediately.
+Therapeutic Area: Diabetes

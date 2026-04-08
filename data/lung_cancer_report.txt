@@ -1,0 +1,16 @@
+Patient Name: Alice Smith
+DOB: 11/22/1975
+Date: 04/08/2026
+
+Reason for Visit: Chronic cough, shortness of breath.
+Imaging Performed: High-Resolution CT thorax without contrast
+Scan Reference: lung_ct.png
+
+Findings:
+- A 2.4 cm speculated nodule in the right upper lobe, highly suspicious for primary pulmonary malignancy.
+- No significant pleural effusion.
+- Multiple sub-centimeter mediastinal lymph nodes noted.
+
+Impression:
+Suspicious mass in right upper lobe. Early stage indication. Needs tissue biopsy for confirmation.
+Therapeutic Area: Lung Cancer

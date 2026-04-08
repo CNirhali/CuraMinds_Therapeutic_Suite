@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapeutic Agent Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h2>TherapeuticAI</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#">Dashboard</a></li>
+                <li><a href="#">Patient Records</a></li>
+                <li><a href="#">Diagnostic History</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+            <div class="user-profile">
+                <div class="avatar">DR</div>
+                <div class="user-info">
+                    <p class="name">Dr. Radiologist</p>
+                    <p class="role">Admin</p>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1>Agentic Diagnosis Hub</h1>
+                <p>Upload medical reports. Our AI Agent accelerates diagnosis from days to seconds.</p>
+            </header>
+
+            <div class="content-grid">
+                <!-- Upload Section -->
+                <section class="upload-section glass-card">
+                    <h3>Analyze New Report</h3>
+                    <div id="dropzone" class="dropzone">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Drag & drop medical report (PDF, CSV, TXT) here</p>
+                        <span class="or">or</span>
+                        <input type="file" id="file-input" class="hidden-input" accept=".pdf,.txt,.csv">
+                        <button id="browse-btn" class="btn-primary">Browse Files</button>
+                    </div>
+                </section>
+
+                <!-- Agent Output Section -->
+                <section class="agent-output-section glass-card">
+                    <h3>Agent Analysis Status</h3>
+                    <div id="image-preview" class="image-preview hidden">
+                        <img id="scanned-image" src="" alt="Medical Scan" />
+                    </div>
+                    <div id="agent-console" class="agent-console">
+                        <div class="empty-state">
+                            <p>Waiting for report upload...</p>
+                        </div>
+                    </div>
+                    <div class="status-indicator hidden" id="status-indicator">
+                        <div class="spinner"></div>
+                        <span>Agent is thinking...</span>
+                    </div>
+                    <div class="chat-container hidden" id="chat-container">
+                        <input type="text" id="query-input" placeholder="Ask advanced queries about the findings..." />
+                        <button id="send-btn" class="btn-primary">→</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+</html>

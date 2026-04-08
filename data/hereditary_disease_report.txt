@@ -1,0 +1,16 @@
+Patient Name: Rajesh Kumar
+DOB: 02/18/1990
+Date: 04/08/2026
+
+Reason for Visit: Recurrent severe headaches, family history of Huntington's.
+Imaging Performed: Brain MRI (T1, T2, FLAIR)
+Scan Reference: brain_mri.png
+
+Findings:
+- Mild bilateral caudate atrophy.
+- No evidence of acute infarction, hemorrhage, or mass lesion.
+- Ventricular system is mildly prominent.
+
+Impression:
+Findings are subtle but consistent with early stages of a neurodegenerative condition given the family history. Genetic counseling and targeted DNA expansion test recommended.
+Therapeutic Area: Hereditary Diseases

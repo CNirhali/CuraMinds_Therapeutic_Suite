@@ -1,0 +1,16 @@
+Patient Name: Maria Garcia
+DOB: 05/14/1982
+Date: 04/08/2026
+
+Reason for Visit: Routine screening, family history of breast cancer.
+Imaging Performed: Bilateral Breast MRI with and without contrast
+Scan Reference: breast_mri.png
+
+Findings:
+- Right breast: Scattered fibroglandular distinct mass measuring 1.8 cm in upper outer quadrant.
+- Enhancing lesion displays Type II kinetic curve.
+- Left breast: Unremarkable.
+
+Impression:
+BI-RADS Category 4. Suspicious abnormality in the right breast. 
+Therapeutic Area: Breast Cancer
