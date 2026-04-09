@@ -1,89 +1,123 @@
 import asyncio
-import random
-import time
 import json
+import os
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
+load_dotenv()
 
 class AgentEngine:
     def __init__(self):
-        pass
+        # Initialize Gemini Client if API key is present
+        api_key = os.environ.get("GEMINI_API_KEY")
+        if api_key and api_key != "your_api_key_here":
+            self.client = genai.Client(api_key=api_key)
+            self.model_name = "gemini-2.5-flash"
+        else:
+            self.client = None
+            print("WARNING: GEMINI_API_KEY not set or invalid in .env")
+
+    def _get_report_content(self, filename: str) -> str:
+        """Helper to match filename mock with actual physical data log."""
+        report_path = ""
+        filename_lower = filename.lower()
+        if "lung" in filename_lower:
+            report_path = "data/lung_cancer_report.txt"
+        elif "breast" in filename_lower:
+            report_path = "data/breast_cancer_report.txt"
+        elif "diab" in filename_lower:
+            report_path = "data/diabetes_report.txt"
+        elif "hered" in filename_lower:
+            report_path = "data/hereditary_disease_report.txt"
+        
+        if report_path and os.path.exists(report_path):
+            with open(report_path, "r", encoding="utf-8") as f:
+                return f.read()
+        return "No specific report text found. General patient data assumed."
 
     async def analyze_report(self, filename: str, content_size: int):
         yield f"Agent Initialized. Receiving report: {filename} ({content_size} bytes)"
         await asyncio.sleep(0.5)
 
-        yield "Parsing medical report format..."
-        await asyncio.sleep(0.5)
-        
-        if "lung" in filename.lower():
-            yield "Extracting pulmonary metrics and cross-referencing CT scans..."
-            await asyncio.sleep(0.5)
-            yield "Identifying specific nodule characteristics in right upper lobe..."
-            final_report = "--- FINAL DIAGNOSIS SUMMARY ---\nDetected 2.4 cm speculated nodule in the right upper lobe.\nSuspicion: Primary pulmonary malignancy (Early Stage).\nRecommendation: Schedule immediate consultation with Thoracic Oncology."
-            image_ref = "lung_ct.png"
-        elif "breast" in filename.lower():
-            yield "Extracting MRI kinetic curves..."
-            await asyncio.sleep(0.5)
-            yield "BI-RADS categorization in progress..."
-            final_report = "--- FINAL DIAGNOSIS SUMMARY ---\nDetected 1.8 cm distinct mass in right breast with Type II kinetics.\nSuspicion: BI-RADS Category 4. Suspicious abnormality.\nRecommendation: Core needle biopsy required. Book Breast Surgical Oncologist."
-            image_ref = "breast_mri.png"
-        elif "diab" in filename.lower():
-            yield "Analyzing metabolic panels and tracking hyperglycemia indicators..."
-            await asyncio.sleep(0.5)
-            yield "Correlating HbA1c with presenting symptomatic fatigue..."
-            final_report = "--- FINAL DIAGNOSIS SUMMARY ---\nFasting Glucose: 215 mg/dL. HbA1c: 8.4%.\nDiagnosis: Diabetes Mellitus.\nRecommendation: Immediate insulin regulation therapy and endocrinologist visit."
-            image_ref = "none"
-        elif "hered" in filename.lower():
-            yield "Cross-referencing genetic markers and neurology imaging..."
-            await asyncio.sleep(0.5)
-            yield "Checking for bilateral caudate atrophy related to HD..."
-            final_report = "--- FINAL DIAGNOSIS SUMMARY ---\nMild neurodegenerative markers found on MRI, consistent with family history.\nDiagnosis: Early manifestations of suspected hereditary neurodegeneration.\nRecommendation: Neurology consult for CAG repeat expansion test."
-            image_ref = "brain_mri.png"
-        else:
-            yield "Analyzing general biomarkers..."
-            await asyncio.sleep(0.5)
-            final_report = "--- FINAL DIAGNOSIS SUMMARY ---\nNo specific severe anomalies detected. Normal vitals.\nRecommendation: Standard annual follow-up."
-            image_ref = "none"
+        if not self.client:
+            yield "WARNING: No Gemini API Key configured!! Please set GEMINI_API_KEY in .env"
+            yield json.dumps({"text": "Error: Gemini API not configured.", "image": "none"})
+            return
 
+        yield "Parsing medical report format and initiating Gemini Advanced Analysis..."
         await asyncio.sleep(0.5)
-        # We yield a JSON string for the final output so the client can pick up the image reference
-        yield json.dumps({"text": final_report, "image": image_ref})
+
+        report_content = self._get_report_content(filename)
+
+        prompt = f"""You are a top-tier medical AI agent acting as a diagnosis specialist processing {filename}.
+Analyze the following patient report.
+
+Report Content:
+{report_content}
+
+Provide your response strictly in the following JSON format without Markdown blocks (like ```json), just raw valid JSON:
+{{
+  "steps": ["Step 1 thought: <what you are extracting>", "Step 2 thought: <what you are correlating>", "Step 3 thought: <diagnostic conclusion>"],
+  "final_diagnosis_summary": "--- FINAL DIAGNOSIS SUMMARY ---\\n<Detailed summary>\\n\\nRecommendation: <Doctor recommendation>",
+  "image_reference_guess": "Pick closely matching graphic: lung_ct.png, breast_mri.png, brain_mri.png, or none"
+}}
+"""
+        try:
+            # Generate the content as a JSON block using Gemini
+            response = await self.client.aio.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(temperature=0.2)
+            )
+            
+            # Clean possible markdown wrapping from LLM output
+            raw_text = response.text.replace("```json", "").replace("```", "").strip()
+            data = json.loads(raw_text)
+            
+            # Stream the steps progressively back to simulating the 'thinking' process
+            for step in data.get("steps", []):
+                yield step
+                await asyncio.sleep(0.8)
+                
+            final_report = data.get("final_diagnosis_summary", "Diagnosis summary generation failed.")
+            image_ref = data.get("image_reference_guess", "none")
+            
+            await asyncio.sleep(0.5)
+            # Send the final structured payload expected by the frontend
+            yield json.dumps({"text": final_report, "image": image_ref})
+            
+        except Exception as e:
+            yield f"Error during Gemini analysis: {str(e)}"
+            final_report = "--- FINAL DIAGNOSIS SUMMARY ---\nAnalysis failed due to an error."
+            yield json.dumps({"text": final_report, "image": "none"})
 
     async def answer_query(self, filename: str, query: str):
-        query = query.lower()
-        await asyncio.sleep(0.3)
-        if "lung" in filename.lower():
-            if "special" in query or "who" in query or "doctor" in query:
-                response = "Based on the right upper lobe nodule, you should consult a **Thoracic Oncologist** and an **Interventional Pulmonologist** for a biopsy."
-            elif "surviv" in query or "stage" in query:
-                response = "The 2.4 cm size without significant lymph node spread on the CT suggests Stage I or Stage II. Early detection greatly improves outcomes (5-year survival > 70% typically for early stage), but staging requires biopsy confirmation."
-            else:
-                response = "I have cross-referenced the lung CT. The immediate priority is confirming the nature of the 2.4cm nodule via biopsy."
-        elif "breast" in filename.lower():
-            if "special" in query or "doctor" in query:
-                response = "You should schedule an appointment with a **Breast Surgical Oncologist** immediately to discuss biopsy options for the BI-RADS 4 lesion."
-            elif "bi-rad" in query or "category 4" in query:
-                response = "BI-RADS Category 4 means the finding is suspicious for malignancy (2% to 94% chance). A biopsy is mandatory to determine if it is indeed cancer."
-            else:
-                response = "Based on the MRI, the Type II kinetic curve in the 1.8cm lesion warrants further invasive testing to verify cellular morphology."
-        elif "diab" in filename.lower():
-            if "diet" in query or "food" in query:
-                response = "Given an HbA1c of 8.4%, strict carbohydrate management, high fiber intake, and the elimination of refined sugars are essential alongside your insulin therapy."
-            elif "special" in query or "doctor" in query:
-                response = "An **Endocrinologist** is the primary medical specialist you need to see, along with a certified **Diabetes Educator**."
-            else:
-                response = "Your glucose levels (215 mg/dL) are critically elevated. Immediate adherence to medication is advised to prevent ketoacidosis."
-        elif "hered" in filename.lower():
-            if "special" in query or "doctor" in query:
-                response = "A **Neurologist specializing in Movement Disorders** or Neurogenetics, along with a **Genetic Counselor**, are the recommended specialists."
-            elif "hd" in query or "huntington" in query:
-                response = "Given the family history and caudate atrophy shown on the MRI, Huntington's Disease is a primary differential diagnosis. A CAG repeat genetic expansion test is conclusive."
-            else:
-                response = "We observed mild ventricular prominence and caudate atrophy on the MRI, typical of certain hereditary neurodegenerative conditions."
-        else:
-            response = "I can analyze context from the specific reports. For general questions, I recommend consulting a General Practitioner."
+        if not self.client:
+             yield "Gemini API Key is not set. Cannot perform real-time reasoning."
+             return
+             
+        report_content = self._get_report_content(filename)
+        
+        system_prompt = f"""You are a helpful, professional medical AI assistant.
+Answer the user's query specifically related to their report context below. 
+Be conversational, reassuring, but medically accurate. 
 
-        # simulated stream
-        words = response.split(' ')
-        for i, word in enumerate(words):
-            yield word + (" " if i < len(words)-1 else "")
-            await asyncio.sleep(0.02)
+Report Context:
+{report_content}
+
+User Query: {query}
+"""
+        try:
+            # Stream the answer live chunk-by-chunk over the websocket
+            response = await self.client.aio.models.generate_content_stream(
+                model=self.model_name,
+                contents=system_prompt,
+                config=types.GenerateContentConfig(temperature=0.3)
+            )
+            async for chunk in response:
+                # Yield text and introduce strict minimal sleep sequence for the UI to consume smoothly if needed
+                yield chunk.text
+                await asyncio.sleep(0.01)
+        except Exception as e:
+            yield f"Error querying Gemini: {str(e)}"
