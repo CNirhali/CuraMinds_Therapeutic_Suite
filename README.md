@@ -10,6 +10,7 @@ Wait times are significantly reduced by ingesting patient records (PDF, TXT) and
 *   **Real-time Streaming Interface:** Built using FastAPI WebSockets, the diagnostic steps and agent insights are securely streamed back to the clinician interface dynamically.
 *   **Integrated Medical Imaging Check:** Supports referencing and embedding relevant scans (CT Scans, MRIs) based on specific condition trajectories directly in the report UI.
 *   **Advanced Clinical Querying:** Interactive clinical chat framework allows clinicians to ask specialized follow-up questions tied to the parsed report (e.g. "What stage could this be and who should I see?").
+*   **Plug-and-play Radiologist Module (Aditya Birla MVP):** A decoupled FASTAPI Router specifically leveraging the Open-Weight **Mistral Model** allowing secure standard interfaces into internal hospital EHR systems.
 *   **Synthetic Demonstration Readiness:** Comes with highly realistic synthetic reports (`data/`) and medical imaging (`static/images`) to demonstrate workflows on standard edge cases immediately upon setup.
 
 ## 🔬 Supported Therapeutic Focus Areas

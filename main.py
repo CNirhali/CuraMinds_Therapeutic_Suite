@@ -4,11 +4,13 @@ from fastapi.responses import FileResponse
 import uvicorn
 
 from agent_engine import AgentEngine
+from hospital_integration_api import router as radiology_router
 
 app = FastAPI(title="Therapeutic Agent API")
 
 # Mount static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.include_router(radiology_router)
 
 @app.get("/")
 async def root():
