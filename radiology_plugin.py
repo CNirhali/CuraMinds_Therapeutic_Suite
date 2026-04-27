@@ -2,7 +2,7 @@ import os
 import json
 import asyncio
 from dotenv import load_dotenv
-from mistralai.client import Mistral
+from mistralai import Mistral
 
 load_dotenv()
 

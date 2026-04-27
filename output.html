@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dry Run Simulation</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            font-size: 16px;
+        }
+        .container {
+            background-color: #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            max-width: 800px;
+            margin: auto;
+            min-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <pre id="output"></pre>
+    </div>
+    <script>
+        const text = `==========================================
+   Guided Co-Creation CLI Simulation      
+==========================================
+
+👤 USER: A bakery website
+[Planner Agent] Analyzing chat history (1 messages)...
+[Planner Agent] ⚠️ Prompt is too vague. Requesting clarification.
+🤖 AI: Will your app need user accounts or a database?
+👤 USER: No, just a static menu display please.
+[Planner Agent] Analyzing chat history (3 messages)...
+[Planner Agent] ✅ Gathered enough info. Generated a technical blueprint.
+🤖 AI: Great! Generating your app now...
+
+[RL Brain] EXPLOITING: chose cursor (Q=0.00) for context '73943058'
+[Writer Agent] Triggering cursor... (Attempt 1)
+[Writer Agent] cursor completed the code changes.
+[Reviewer Agent] Analyzing changes...
+[Reviewer Agent] LGTM! Code is approved.
+[Packager Agent] Zipping workspace into App.zip...
+[RL Brain] Updated Q-value for cursor in context '73943058': 0.00 -> 1.00
+
+🎉 App generation complete! Ready for download.`;
+        
+        let i = 0;
+        const speed = 20;
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("output").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        typeWriter();
+    </script>
+</body>
+</html>

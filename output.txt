@@ -1,0 +1,22 @@
+==========================================
+   Guided Co-Creation CLI Simulation      
+==========================================
+
+👤 USER: A bakery website
+[Planner Agent] Analyzing chat history (1 messages)...
+[Planner Agent] ⚠️ Prompt is too vague. Requesting clarification.
+🤖 AI: Will your app need user accounts or a database?
+👤 USER: No, just a static menu display please.
+[Planner Agent] Analyzing chat history (3 messages)...
+[Planner Agent] ✅ Gathered enough info. Generated a technical blueprint.
+🤖 AI: Great! Generating your app now...
+
+[RL Brain] EXPLOITING: chose cursor (Q=0.00) for context '73943058'
+[Writer Agent] Triggering cursor... (Attempt 1)
+[Writer Agent] cursor completed the code changes.
+[Reviewer Agent] Analyzing changes...
+[Reviewer Agent] LGTM! Code is approved.
+[Packager Agent] Zipping workspace into App.zip...
+[RL Brain] Updated Q-value for cursor in context '73943058': 0.00 -> 1.00
+
+🎉 App generation complete! Ready for download.
